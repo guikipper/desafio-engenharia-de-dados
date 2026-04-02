@@ -2,8 +2,6 @@
 
 DROP TABLE IF EXISTS owners CASCADE;
 DROP TABLE IF EXISTS properties CASCADE;
-DROP TABLE IF EXISTS extraction_logs CASCADE;
-
 -- Rural properties
 CREATE TABLE properties (
     incra_code VARCHAR(20) PRIMARY KEY,
@@ -25,19 +23,6 @@ CREATE TABLE owners (
     relationship VARCHAR(50),
     participation_pct NUMERIC(6, 2),
     UNIQUE (incra_code, cpf)
-);
-
--- Extraction metadata logs
-CREATE TABLE extraction_logs (
-    id SERIAL PRIMARY KEY,
-    started_at TIMESTAMP NOT NULL,
-    finished_at TIMESTAMP,
-    state CHAR(2),
-    municipality VARCHAR(100),
-    extraction_type VARCHAR(30) NOT NULL, -- 'csv_with_municipality', 'csv_without_municipality', 'incra_lookup'
-    record_count INTEGER DEFAULT 0,
-    status VARCHAR(20) DEFAULT 'running', -- 'running', 'success', 'error'
-    error_message TEXT
 );
 
 -- Primary index: incra_code is already PK on properties (automatic B-tree index)

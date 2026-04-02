@@ -184,6 +184,7 @@ def get_db():
     return conn
 
 
+
 def upsert_property(cur, row: dict):
     """
     Inserts or updates a property in the 'properties' table.
