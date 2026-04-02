@@ -9,7 +9,7 @@ docker-compose up --build
 ```
 
 ## Dica
-Para visualizar os códigos INCRA, utilize o endpoint: /imoveis, ele irá listar os códigos INCRA para serem consumidos pelo endpoint /imovel/01001000009.
+Para visualizar os códigos INCRA, utilize o endpoint: `GET /imovel/, ele irá listar os códigos INCRA para serem consumidos pelo endpoint `GET /imovel/{codigo_incra}.
 
 Isso inicia 3 serviços:
 
