@@ -85,11 +85,9 @@ A busca usa **Index Scan** nas duas tabelas (PK do `imoveis` + índice da FK em 
 
 ## O que faria diferente com mais tempo
 - Adicionar testes automatizados (pytest) para o pipeline e a API
-- Usar async (httpx + asyncpg) para paralelizar as requisições de extração
 - Adicionar paginação e filtros na API (por UF, município, situação)
-- Implementar cache (Redis) para consultas frequentes
-- Monitoramento com métricas (Prometheus) e logs estruturados (JSON)
-- CI/CD com GitHub Actions para validar o pipeline automaticamente
+- Monitoramento com métricas e logs estruturados (JSON)
+- Interface amigável para consultas
 
 ## Stack
 
