@@ -38,6 +38,29 @@ def anonymize_cpf(cpf: str) -> str:
     return f"***.***.***-{digits[-2]}{digits[-1]}"
 
 
+@app.get("/imoveis")
+def list_properties():
+    conn = get_db()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(
+                "SELECT incra_code, name, municipality, state FROM properties ORDER BY state, municipality"
+            )
+            rows = cur.fetchall()
+        return [
+            {
+                "codigo_incra": r["incra_code"],
+                "denominacao": r["name"],
+                "municipio": r["municipality"],
+                "uf": r["state"],
+                "link": f"/imovel/{r['incra_code']}",
+            }
+            for r in rows
+        ]
+    finally:
+        conn.close()
+
+
 @app.get("/imovel/{incra_code}")
 def get_property(incra_code: str):
     conn = get_db()
