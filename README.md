@@ -8,6 +8,9 @@ Pipeline completo de extração, armazenamento e exposição de dados do Sistema
 docker-compose up --build
 ```
 
+## Dica
+Para visualizar os códigos INCRA, utilize o endpoint: /imoveis, ele irá listar os códigos INCRA para serem consumidos pelo endpoint /imovel/01001000009.
+
 Isso inicia 3 serviços:
 
 1. **db** — PostgreSQL com schema criado automaticamente
@@ -72,28 +75,6 @@ SNCR (site) ──► pipeline.py ──► PostgreSQL ──► api.py (FastAPI
 - `proprietarios.codigo_incra` — índice na FK para acelerar o JOIN na consulta da API.
 - `imoveis(uf)` e `imoveis(uf, municipio)` — índices para consultas analíticas por região.
 
-Com ~3.000 imóveis e ~9.000 proprietários, qualquer consulta por código INCRA executa em < 1ms.
-
-### EXPLAIN ANALYZE
-
-```sql
-EXPLAIN ANALYZE
-SELECT i.codigo_incra, i.area_hectares, i.situacao, i.denominacao,
-       p.nome, p.cpf, p.vinculo, p.pct_participacao
-FROM imoveis i
-LEFT JOIN proprietarios p ON p.codigo_incra = i.codigo_incra
-WHERE i.codigo_incra = '01001000000';
-```
-
-```
-Nested Loop Left Join  (actual time=0.363..0.386 rows=4 loops=1)
-  ->  Index Scan using imoveis_pkey on imoveis i  (actual time=0.160..0.181 rows=1)
-        Index Cond: (codigo_incra = '01001000000')
-  ->  Index Scan using idx_proprietarios_codigo_incra on proprietarios p  (actual time=0.143..0.145 rows=4)
-        Index Cond: (codigo_incra = '01001000000')
-Planning Time: 9.081 ms
-Execution Time: 1.237 ms
-```
 
 A busca usa **Index Scan** nas duas tabelas (PK do `imoveis` + índice da FK em `proprietarios`), executando em **~0.4ms** — bem abaixo do SLA de 2 segundos.
 
